@@ -5,6 +5,12 @@ import { convertHexColorToRgbColor, convertRgbColorToHexColor, emit, isValidHexC
 
 import { ResizeWindowHandler } from './types'
 
+const Variable = ({ children }) => {
+  return <span style={{ fontSize: 11, padding: '1px 5px', border: 'var(--figma-color-border)1px solid', backgroundColor: 'var(--figma-color-bg-secondary)' }}>
+    {children}
+  </span>
+}
+
 function Plugin() {
   function onWindowResize(windowSize: { width: number; height: number }) {
     emit<ResizeWindowHandler>('RESIZE_WINDOW', windowSize)
@@ -29,9 +35,9 @@ function Plugin() {
           // console.log(variable)
           const { name, resolvedType, id, defaultValue } = variable
           const value = typeof defaultValue === 'object' && ("r" in defaultValue) && ("g" in defaultValue) && ("b" in defaultValue) ? "#" + convertRgbColorToHexColor(defaultValue) : defaultValue
-          console.log({ defaultValue, value })
+          // console.log({ defaultValue, value })
           return <div>
-            {resolvedType} {name}:{value}
+            {resolvedType} <Variable>{name}</Variable>:{value}
           </div>
         })}
       </div>
