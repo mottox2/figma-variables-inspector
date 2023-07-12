@@ -18,8 +18,8 @@
     "editorType": [
       "figma"
     ],
-    "id": "preact-resizable",
-    "name": "Preact Resizable",
+    "id": "variables-viewer",
+    "name": "Variables Viewer",
     "main": "src/main.ts",
     "ui": "src/ui.tsx"
   }

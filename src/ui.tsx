@@ -1,5 +1,7 @@
+import { h } from 'preact'
+import { useState } from 'preact/hooks'
 import { render, useWindowResize } from '@create-figma-plugin/ui'
-import { emit } from '@create-figma-plugin/utilities'
+import { emit, on } from '@create-figma-plugin/utilities'
 
 import { ResizeWindowHandler } from './types'
 
@@ -14,7 +16,19 @@ function Plugin() {
     minWidth: 120,
     resizeBehaviorOnDoubleClick: 'minimize'
   })
-  return null
+  const [data, setData] = useState({})
+  on('COLLECT_VARIABLES', ({ data }) => {
+    setData(data)
+  })
+  return <div>
+    {Object.keys(data).map(key => {
+      const variables = data[key]
+      return <div>
+        <h3>{key}</h3>
+        <p>{JSON.stringify(variables || {})}</p>
+      </div>
+    })}
+  </div>
 }
 
 export default render(Plugin)
