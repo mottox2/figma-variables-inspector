@@ -1,6 +1,14 @@
 import { emit, on, showUI } from '@create-figma-plugin/utilities'
 import { ResizeWindowHandler } from './types'
 
+const getFullName = (node: SceneNode): string => {
+  if (node.parent && node.parent.type !== 'PAGE' && node.parent.type !== 'DOCUMENT') {
+    return getFullName(node.parent) + '/' + node.name
+  }
+  return node.name
+}
+
+
 export default function () {
   on<ResizeWindowHandler>(
     'RESIZE_WINDOW',
@@ -39,6 +47,7 @@ export default function () {
           if (!useNode) return
           console.log(node)
           nodes[node.id] = {
+            fullName: getFullName(node),
             name: node.name,
             type: node.type,
             variables: node.boundVariables,

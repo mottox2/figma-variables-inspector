@@ -50,15 +50,18 @@ function Plugin() {
   return <div>
     {Object.values(nodes).map(node => {
       console.log({ node })
-      const { id, variables: aliases, name, relatedActions } = node as {
+      const { id, variables: aliases, name, fullName, relatedActions } = node as {
         id: string
         name: string
+        fullName: string
         variables: SceneNodeMixin['boundVariables'],
         relatedActions: string[]
       }
       const { fills, strokes, componentProperties = {}, ...otherVariables } = aliases || {}
       return <div>
-        <h3 style={{ fontWeight: 'bold' }}>{name}</h3>
+        <h3 style={{ padding: '8px 8px', fontSize: 11 }}>
+          <span style={{ opacity: 0.5 }}>{fullName.replace(new RegExp(String.raw`/${name}$`), '')}/</span>{name}
+        </h3>
         {fills?.map(fill => {
           return <Variable label="fill" variable={variables[fill.id]} />
         })}
