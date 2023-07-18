@@ -1,7 +1,7 @@
-import { FunctionComponent, h, Fragment } from 'preact'
+import { FunctionComponent, h } from 'preact'
 import { useState } from 'preact/hooks'
 import { render, useWindowResize } from '@create-figma-plugin/ui'
-import { convertHexColorToRgbColor, convertRgbColorToHexColor, emit, isValidHexColor, on } from '@create-figma-plugin/utilities'
+import { convertRgbColorToHexColor, emit, on } from '@create-figma-plugin/utilities'
 
 import { ResizeWindowHandler } from './types'
 

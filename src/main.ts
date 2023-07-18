@@ -1,10 +1,5 @@
 import { emit, on, showUI } from '@create-figma-plugin/utilities'
-
 import { ResizeWindowHandler } from './types'
-
-const getName = (node: FrameNode) => {
-
-}
 
 export default function () {
   on<ResizeWindowHandler>(
@@ -20,8 +15,8 @@ export default function () {
     async () => {
       const variables: Record<string, any> = {}
       const nodes: Record<string, any> = {}
-      const collectVariables = (node: SceneNode, map: Map<string, any>) => {
-        if ("children" in node) node.children.forEach(child => collectVariables(child, map));
+      const collectVariables = (node: SceneNode) => {
+        if ("children" in node) node.children.forEach(child => collectVariables(child));
 
         // console.log('[VariablesViewer]', node.boundVariables)
         if (node.boundVariables) {
@@ -64,11 +59,9 @@ export default function () {
 
       const selection = figma.currentPage.selection
       console.log(selection)
-      // const variables = new Map<string, any>()
       selection.forEach(node => {
-        collectVariables(node, new Map())
+        collectVariables(node)
       })
-      // const result = Object.fromEntries(variables)
 
       emit('COLLECT_VARIABLES', { variables, nodes });
     }
