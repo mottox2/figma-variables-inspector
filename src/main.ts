@@ -16,56 +16,28 @@ export default function () {
   )
 
   const collectVariables = (node: SceneNode, map: Map<string, any>) => {
-    if ("children" in node) {
-      console.log('[VariablesViewer]', 'has children')
-      node.children.forEach(child => {
-        collectVariables(child, map);
-      });
-    }
+    if ("children" in node) node.children.forEach(child => collectVariables(child, map));
 
-    if ("reactions" in node) {
-      // NOTE: 現状Set Variables, Conditionalのactionは取得できない
-      node.reactions.forEach(reaction => {
-        console.log('[VariablesViewer]', reaction);
-      })
-    }
+    // NOTE: 現状Set Variables, Conditionalのactionは取得できない
+    if ("reactions" in node)
+      node.reactions.forEach(reaction => console.log('[VariablesViewer]', reaction))
 
     // console.log('[VariablesViewer]', node.boundVariables)
     if (node.boundVariables) {
       const variables: any = [];
-      // NOTE: const { fills, strokes, componentProperties, ...otherVariables } = node.boundVariables
-      Object.entries(node.boundVariables).forEach(([key, vAliasOrAliases]) => {
-        // console.log({ key, name: node.name, vAliasOrAliases });
-        if (!vAliasOrAliases) return;
-
-        const processVariable = (alias: any) => {
-          const v = figma.variables.getVariableById(alias.id);
-          // console.log(alias, alias.id, v);
-          if (v) {
-            const { name, resolvedType, id, valuesByMode } = v;
-            const defaultValue = valuesByMode[Object.keys(valuesByMode)[0]];
-            variables.push({ name, resolvedType, id, defaultValue });
-          }
-        };
-
-        if (key === 'componentProperties') {
-          Object.entries(node.boundVariables?.componentProperties ?? {}).forEach(([key, alias]) => {
-            console.log('componentProperties', key, alias)
-            processVariable(alias)
-          })
-          return
-        }
-
-        console.log('[VariablesViewer]', vAliasOrAliases)
-
-        if (Array.isArray(vAliasOrAliases)) {
-          vAliasOrAliases.forEach(processVariable);
-        } else if (typeof vAliasOrAliases === 'object') {
-          processVariable(vAliasOrAliases);
-        }
-
-        console.log(node.name, variables)
-      });
+      const processVariable = (alias: VariableAlias) => {
+        const variable = figma.variables.getVariableById(alias.id);
+        if (!variable) return;
+        // console.log(alias, alias.id, v);
+        const { name, resolvedType, id, valuesByMode } = variable;
+        const defaultValue = valuesByMode[Object.keys(valuesByMode)[0]];
+        variables.push({ name, resolvedType, id, defaultValue });
+      };
+      const { fills, strokes, componentProperties = {}, ...otherVariables } = node.boundVariables
+      fills?.forEach(processVariable)
+      strokes?.forEach(processVariable)
+      Object.entries(componentProperties).forEach(([_, alias]) => processVariable(alias))
+      Object.entries(otherVariables).forEach(([_, alias]) => processVariable(alias))
       if (variables.length > 0) map.set(node.name, variables);
     }
   };
@@ -89,7 +61,7 @@ export default function () {
 
 
   showUI({
-    height: 320,
-    width: 240
+    height: 480,
+    width: 320
   })
 }
