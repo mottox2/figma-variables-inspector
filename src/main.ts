@@ -22,15 +22,22 @@ export default function () {
       });
     }
 
+    if ("reactions" in node) {
+      // NOTE: 現状Set Variables, Conditionalのactionは取得できない
+      node.reactions.forEach(reaction => {
+        console.log(reaction);
+      })
+    }
+
     if (node.boundVariables) {
       const variables: any = [];
       Object.entries(node.boundVariables).forEach(([key, vAliasOrAliases]) => {
-        console.log({ key, name: node.name, vAliasOrAliases });
+        // console.log({ key, name: node.name, vAliasOrAliases });
         if (!vAliasOrAliases) return;
 
         const processVariable = (alias: any) => {
           const v = figma.variables.getVariableById(alias.id);
-          console.log(alias, v);
+          // console.log(alias, v);
           if (v) {
             const { name, resolvedType, id, valuesByMode } = v;
             const defaultValue = valuesByMode[Object.keys(valuesByMode)[0]];
@@ -43,7 +50,6 @@ export default function () {
         } else {
           processVariable(vAliasOrAliases);
         }
-
 
         console.log(node.name, variables)
       });
