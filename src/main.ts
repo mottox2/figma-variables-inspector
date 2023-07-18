@@ -17,6 +17,7 @@ export default function () {
 
   const collectVariables = (node: SceneNode, map: Map<string, any>) => {
     if ("children" in node) {
+      console.log('[VariablesViewer]', 'has children')
       node.children.forEach(child => {
         collectVariables(child, map);
       });
@@ -25,19 +26,21 @@ export default function () {
     if ("reactions" in node) {
       // NOTE: 現状Set Variables, Conditionalのactionは取得できない
       node.reactions.forEach(reaction => {
-        console.log(reaction);
+        console.log('[VariablesViewer]', reaction);
       })
     }
 
+    // console.log('[VariablesViewer]', node.boundVariables)
     if (node.boundVariables) {
       const variables: any = [];
+      // NOTE: const { fills, strokes, componentProperties, ...otherVariables } = node.boundVariables
       Object.entries(node.boundVariables).forEach(([key, vAliasOrAliases]) => {
         // console.log({ key, name: node.name, vAliasOrAliases });
         if (!vAliasOrAliases) return;
 
         const processVariable = (alias: any) => {
           const v = figma.variables.getVariableById(alias.id);
-          // console.log(alias, v);
+          // console.log(alias, alias.id, v);
           if (v) {
             const { name, resolvedType, id, valuesByMode } = v;
             const defaultValue = valuesByMode[Object.keys(valuesByMode)[0]];
@@ -45,9 +48,19 @@ export default function () {
           }
         };
 
+        if (key === 'componentProperties') {
+          Object.entries(node.boundVariables?.componentProperties ?? {}).forEach(([key, alias]) => {
+            console.log('componentProperties', key, alias)
+            processVariable(alias)
+          })
+          return
+        }
+
+        console.log('[VariablesViewer]', vAliasOrAliases)
+
         if (Array.isArray(vAliasOrAliases)) {
           vAliasOrAliases.forEach(processVariable);
-        } else {
+        } else if (typeof vAliasOrAliases === 'object') {
           processVariable(vAliasOrAliases);
         }
 
