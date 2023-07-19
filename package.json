@@ -16,10 +16,14 @@
   },
   "figma-plugin": {
     "editorType": [
-      "figma"
+      "figma",
+      "dev"
     ],
-    "id": "variables-viewer",
-    "name": "Variables Viewer",
+    "capabilities": [
+      "inspect"
+    ],
+    "id": "variables-inspector",
+    "name": "Variables Inspector",
     "main": "src/main.ts",
     "ui": "src/ui.tsx"
   }

@@ -1,10 +1,14 @@
 {
   "api": "1.0.0",
   "editorType": [
-    "figma"
+    "figma",
+    "dev"
   ],
-  "id": "variables-viewer",
-  "name": "Variables Viewer",
+  "id": "variables-inspector",
+  "name": "Variables Inspector",
   "main": "build/main.js",
-  "ui": "build/ui.js"
+  "ui": "build/ui.js",
+  "capabilities": [
+    "inspect"
+  ]
 }
