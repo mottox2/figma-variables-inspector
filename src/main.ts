@@ -68,12 +68,15 @@ export default function () {
       };
 
       const selection = figma.currentPage.selection
-      console.log(selection)
+
+      console.log(selection, selection.length)
+      if (selection.length === 0)
+        return emit('COLLECT_VARIABLES', { variables, nodes, hasSelection: false })
       selection.forEach(node => {
         collectVariables(node)
       })
 
-      emit('COLLECT_VARIABLES', { variables, nodes });
+      emit('COLLECT_VARIABLES', { variables, nodes, hasSelection: true });
     }
   );
 

@@ -40,17 +40,25 @@ function Plugin() {
   const [data, setData] = useState<{
     nodes: Record<string, any>
     variables: Record<string, any>
+    hasSelection: boolean
   }>({
     nodes: {},
-    variables: {}
+    variables: {},
+    hasSelection: false
   })
   on('COLLECT_VARIABLES', (data) => {
     setData(data)
     console.log(data)
   })
-  const { variables, nodes } = data
+  const { variables, nodes, hasSelection } = data
 
   return <div>
+    {!hasSelection && <div style={{ alignItems: 'center', height: '100vh', display: 'flex', justifyContent: 'center' }}>
+      No layers selected
+    </div>}
+    {hasSelection && Object.keys(nodes).length === 0 && <div style={{ alignItems: 'center', height: '100vh', display: 'flex', justifyContent: 'center' }}>
+      No variables found
+    </div>}
     {Object.values(nodes).reverse().map(node => {
       console.log({ node })
       const { id, type, variables: aliases, name, fullName, relatedActions } = node as {
@@ -74,7 +82,7 @@ function Plugin() {
         'LINE': <IconLayerLine16 />,
         'RECTANGLE': <IconLayerRectangle16 />,
       } as Record<NodeType, JSX.Element>)[type as NodeType]
-      return <div>
+      return <div key={id}>
         <Layer icon={icon} value={false} style={{ textOverflow: 'ellipsis ellipsis' }} onClick={() => {
           emit('SELECT_NODE', id)
         }}>
