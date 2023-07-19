@@ -1,6 +1,6 @@
-import { FunctionComponent, h } from 'preact'
+import { FunctionComponent, JSX, h } from 'preact'
 import { useState } from 'preact/hooks'
-import { render, useWindowResize } from '@create-figma-plugin/ui'
+import { IconLayerComponent16, IconLayerEllipse16, IconLayerFrame16, IconLayerGroup16, IconLayerInstance16, IconLayerLine16, IconLayerRectangle16, IconLayerText16, Layer, render, useWindowResize } from '@create-figma-plugin/ui'
 import { convertRgbColorToHexColor, emit, on } from '@create-figma-plugin/utilities'
 
 import { ResizeWindowHandler } from './types'
@@ -8,7 +8,7 @@ import { ResizeWindowHandler } from './types'
 const VariableText: FunctionComponent<{
   title: string
 }> = ({ children, title }) => {
-  return <span title={title} style={{ fontSize: 11, padding: '1px 5px', border: 'var(--figma-color-border)1px solid', backgroundColor: 'var(--figma-color-bg-secondary)' }}>
+  return <span title={title} style={{ fontSize: 11, padding: '1px 5px', borderRadius: 4, border: 'var(--figma-color-border) 1px solid', backgroundColor: 'var(--figma-color-bg-secondary)' }}>
     {children}
   </span>
 }
@@ -17,10 +17,13 @@ const Variable = ({ label, variable }: any) => {
   const { name, resolvedType, id, defaultValue } = variable
   const isColor = resolvedType === 'COLOR' && typeof defaultValue === 'object' && ("r" in defaultValue) && ("g" in defaultValue) && ("b" in defaultValue)
   const value = isColor ? "#" + convertRgbColorToHexColor(defaultValue) : defaultValue
-  return <div>{label}: {isColor && <span style={{
-    width: 16, height: 16, display: 'inline-block', verticalAlign: 'middle', backgroundColor: value
+  return <div style={{ padding: '4px 16px 4px 36px', display: 'flex', alignItems: 'center' }}>{label}
+    <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 4 }}>{isColor && <span style={{
+      width: 16, height: 16, display: 'inline-block', backgroundColor: value
   }}>
-  </span>} <VariableText title={value}>{name}</VariableText>:{value}</div>
+    </span>} <VariableText title={value}>{name}</VariableText>
+    </span>
+  </div>
 }
 
 function Plugin() {
@@ -48,20 +51,33 @@ function Plugin() {
   const { variables, nodes } = data
 
   return <div>
-    {Object.values(nodes).map(node => {
+    {Object.values(nodes).reverse().map(node => {
       console.log({ node })
-      const { id, variables: aliases, name, fullName, relatedActions } = node as {
+      const { id, type, variables: aliases, name, fullName, relatedActions } = node as {
         id: string
+        type: string,
         name: string
         fullName: string
         variables: SceneNodeMixin['boundVariables'],
         relatedActions: string[]
       }
       const { fills, strokes, componentProperties = {}, ...otherVariables } = aliases || {}
+
+      type NodeType = SceneNode['type']
+      const icon = ({
+        'COMPONENT': <IconLayerComponent16 />,
+        'INSTANCE': <IconLayerInstance16 />,
+        'TEXT': <IconLayerText16 />,
+        'ELLIPSE': <IconLayerEllipse16 />,
+        'FRAME': <IconLayerFrame16 />,
+        'GROUP': <IconLayerGroup16 />,
+        'LINE': <IconLayerLine16 />,
+        'RECTANGLE': <IconLayerRectangle16 />,
+      } as Record<NodeType, JSX.Element>)[type as NodeType]
       return <div>
-        <h3 style={{ padding: '8px 8px', fontSize: 11 }}>
+        <Layer icon={icon} value={false} style={{ textOverflow: 'ellipsis ellipsis' }}>
           <span style={{ opacity: 0.5 }}>{fullName.replace(new RegExp(String.raw`/${name}$`), '')}/</span>{name}
-        </h3>
+        </Layer>
         {fills?.map(fill => {
           return <Variable label="fill" variable={variables[fill.id]} />
         })}
@@ -75,7 +91,7 @@ function Plugin() {
           return <Variable label={property} variable={variables[alias.id]} />
         })}
         {relatedActions.map(trigger => {
-          return <div>{trigger} may have variable related actions</div>
+          return <div style={{ padding: '6px 16px 6px 36px' }}>{trigger} <span style={{ opacity: 0.5 }}>may have variable related actions</span></div>
         })}
       </div>
     })}
