@@ -1,14 +1,1 @@
-{
-  "api": "1.0.0",
-  "editorType": [
-    "figma",
-    "dev"
-  ],
-  "id": "variables-inspector",
-  "name": "Variables Inspector",
-  "main": "build/main.js",
-  "ui": "build/ui.js",
-  "capabilities": [
-    "inspect"
-  ]
-}
+{"api":"1.0.0","editorType":["figma","dev"],"id":"1263366994349005841","name":"Variables Inspector","main":"build/main.js","ui":"build/ui.js","capabilities":["inspect"]}

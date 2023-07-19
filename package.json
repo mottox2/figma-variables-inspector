@@ -22,7 +22,7 @@
     "capabilities": [
       "inspect"
     ],
-    "id": "variables-inspector",
+    "id": "1263366994349005841",
     "name": "Variables Inspector",
     "main": "src/main.ts",
     "ui": "src/ui.tsx"
