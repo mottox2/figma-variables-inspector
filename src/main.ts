@@ -47,6 +47,7 @@ export default function () {
           if (!useNode) return
           console.log(node)
           nodes[node.id] = {
+            id: node.id,
             fullName: getFullName(node),
             name: node.name,
             type: node.type,
@@ -76,6 +77,12 @@ export default function () {
     }
   );
 
+  // 理想を言えば、selectionを変更する前のものを残してundoできるとめちゃ嬉しい。
+  on('SELECT_NODE', (id) => {
+    const node = figma.getNodeById(id)
+    if (!node || node.type === 'PAGE' || node.type === 'DOCUMENT') return
+    figma.currentPage.selection = [node]
+  })
 
   showUI({
     height: 480,

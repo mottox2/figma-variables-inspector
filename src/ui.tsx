@@ -75,7 +75,9 @@ function Plugin() {
         'RECTANGLE': <IconLayerRectangle16 />,
       } as Record<NodeType, JSX.Element>)[type as NodeType]
       return <div>
-        <Layer icon={icon} value={false} style={{ textOverflow: 'ellipsis ellipsis' }}>
+        <Layer icon={icon} value={false} style={{ textOverflow: 'ellipsis ellipsis' }} onClick={() => {
+          emit('SELECT_NODE', id)
+        }}>
           <span style={{ opacity: 0.5 }}>{fullName.replace(new RegExp(String.raw`/${name}$`), '')}/</span>{name}
         </Layer>
         {fills?.map(fill => {
