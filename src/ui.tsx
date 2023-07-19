@@ -1,5 +1,5 @@
 import { FunctionComponent, JSX, h } from 'preact'
-import { useState } from 'preact/hooks'
+import { useEffect, useState } from 'preact/hooks'
 import { IconLayerComponent16, IconLayerEllipse16, IconLayerFrame16, IconLayerGroup16, IconLayerInstance16, IconLayerLine16, IconLayerRectangle16, IconLayerText16, Layer, render, useWindowResize } from '@create-figma-plugin/ui'
 import { convertRgbColorToHexColor, emit, on } from '@create-figma-plugin/utilities'
 
@@ -50,6 +50,9 @@ function Plugin() {
     setData(data)
     console.log(data)
   })
+  useEffect(() => {
+    emit('INIT')
+  }, [])
   const { variables, nodes, hasSelection } = data
 
   return <div>
@@ -86,7 +89,9 @@ function Plugin() {
         <Layer icon={icon} value={false} style={{ textOverflow: 'ellipsis ellipsis' }} onClick={() => {
           emit('SELECT_NODE', id)
         }}>
-          <span style={{ opacity: 0.5 }}>{fullName.replace(new RegExp(String.raw`/${name}$`), '')}/</span>{name}
+          {/* <span style={{ opacity: 0.5 }}>{fullName.replace(new RegExp(String.raw`/${name}$`), '')}/</span> */}
+          {/* 親フレームを表示してもよい */}
+          {name}
         </Layer>
         {fills?.map(fill => {
           return <Variable label="fill" variable={variables[fill.id]} />
