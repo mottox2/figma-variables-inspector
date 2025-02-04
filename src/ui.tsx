@@ -1,6 +1,6 @@
 import { FunctionComponent, JSX, h } from 'preact'
 import { useEffect, useState } from 'preact/hooks'
-import { IconLayerComponent16, IconLayerEllipse16, IconLayerFrame16, IconLayerGroup16, IconLayerInstance16, IconLayerLine16, IconLayerRectangle16, IconLayerText16, Layer, render, useWindowResize } from '@create-figma-plugin/ui'
+import { IconLayerComponent16, IconLayerEllipse16, IconLayerFrame16, IconLayerGroup16, IconLayerInstance16, IconLayerLine16, IconLayerRectangle16, IconLayerText16, IconLayerVector16, Layer, render, useWindowResize } from '@create-figma-plugin/ui'
 import { convertRgbColorToHexColor, emit, on } from '@create-figma-plugin/utilities'
 
 import { ResizeWindowHandler } from './types'
@@ -84,6 +84,8 @@ function Plugin() {
         'GROUP': <IconLayerGroup16 />,
         'LINE': <IconLayerLine16 />,
         'RECTANGLE': <IconLayerRectangle16 />,
+        'VECTOR': <IconLayerVector16 />,
+        'POLYGON': <IconLayerVector16 />,
       } as Record<NodeType, JSX.Element>)[type as NodeType]
       return <div key={id}>
         <Layer icon={icon} value={false} style={{ textOverflow: 'ellipsis ellipsis' }} onClick={() => {
