@@ -39,10 +39,17 @@ export default function () {
         const { fills, strokes, componentProperties = {}, ...otherVariables } = node.boundVariables
         fills?.forEach(processVariable)
         strokes?.forEach(processVariable)
-        Object.entries(componentProperties).forEach(([_, alias]) => processVariable(alias))
-        Object.entries(otherVariables).forEach(([_, alias]) => processVariable(alias))
+        Object.entries(componentProperties).forEach(([_, alias]) => processVariable(alias));
+        // 一旦無効化
+        // Object.entries(otherVariables).forEach(([_, alias]) => {
+        //   if (Array.isArray(alias)) {
+        //     alias.forEach(processVariable)
+        //   } else {
+        //     processVariable(alias)
+        //   }
+        // })
         if (!useNode) return
-        console.log(node)
+        // console.log(node)
         nodes[node.id] = {
           id: node.id,
           fullName: getFullName(node),
@@ -58,7 +65,7 @@ export default function () {
       // TODO: 無料プランではここの処理をスキップしたい
       if (nodes[node.id] && "reactions" in node)
         node.reactions.forEach(reaction => {
-          console.log('[VariablesViewer]', reaction)
+          // console.log('[VariablesViewer]', reaction)
           if (reaction.action) return
           nodes[node.id].relatedActions.push(reaction.trigger?.type)
         })
@@ -66,7 +73,7 @@ export default function () {
 
     const selection = figma.currentPage.selection
 
-    console.log(selection, selection.length)
+    // console.log(selection, selection.length)
     if (selection.length === 0)
       return emit('COLLECT_VARIABLES', { variables, nodes, hasSelection: false })
     selection.forEach(node => {
