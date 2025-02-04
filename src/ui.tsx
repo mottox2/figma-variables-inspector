@@ -48,7 +48,7 @@ function Plugin() {
   })
   on('COLLECT_VARIABLES', (data) => {
     setData(data)
-    console.log(data)
+    // console.log(data)
   })
   useEffect(() => {
     emit('INIT')
@@ -63,7 +63,7 @@ function Plugin() {
       No variables found
     </div>}
     {Object.values(nodes).reverse().map(node => {
-      console.log({ node })
+      // console.log({ node })
       const { id, type, variables: aliases, name, fullName, relatedActions } = node as {
         id: string
         type: string,
@@ -106,7 +106,8 @@ function Plugin() {
           return <Variable label={property} variable={variables[alias.id]} />
         })}
         {relatedActions.map(trigger => {
-          return <div style={{ padding: '6px 16px 6px 36px' }}>{trigger} <span style={{ opacity: 0.5 }}>may have variable related actions</span></div>
+          return <div style={{ padding: '6px 16px 6px 36px' }}>{JSON.stringify(trigger, null, 2)}</div>
+          // return <div style={{ padding: '6px 16px 6px 36px' }}>{trigger} <span style={{ opacity: 0.5 }}>may have variable related actions</span></div>
         })}
       </div>
     })}
