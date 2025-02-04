@@ -25,6 +25,7 @@
     "id": "1263366994349005841",
     "name": "Variables Inspector",
     "main": "src/main.ts",
-    "ui": "src/ui.tsx"
+    "ui": "src/ui.tsx",
+    "networkAccess": { "allowedDomains": ["none"] }
   }
 }
