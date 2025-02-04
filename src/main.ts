@@ -40,14 +40,13 @@ export default function () {
         fills?.forEach(processVariable)
         strokes?.forEach(processVariable)
         Object.entries(componentProperties).forEach(([_, alias]) => processVariable(alias));
-        // 一旦無効化
-        // Object.entries(otherVariables).forEach(([_, alias]) => {
-        //   if (Array.isArray(alias)) {
-        //     alias.forEach(processVariable)
-        //   } else {
-        //     processVariable(alias)
-        //   }
-        // })
+        Object.entries(otherVariables).forEach(([_, alias]) => {
+          if (Array.isArray(alias)) {
+            alias.forEach(processVariable)
+          } else {
+            processVariable(alias)
+          }
+        })
         if (!useNode) return
         // console.log(node)
         nodes[node.id] = {

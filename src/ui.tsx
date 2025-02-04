@@ -105,8 +105,13 @@ function Plugin() {
           return <Variable label={property} variable={variables[alias.id]} />
         })}
         {Object.entries(otherVariables).map(([property, alias]) => {
-          // console.log({ property, alias })
-          // return <Variable label={property} variable={variables[alias.id]} />
+          if (Array.isArray(alias)) {
+            return alias.map(a => {
+              return <Variable label={property} variable={variables[a.id]} />
+            })
+          } else {
+            return <Variable label={property} variable={variables[alias.id]} />
+          }
         })}
         {relatedActions.map(trigger => {
           return <div style={{ padding: '6px 16px 6px 36px' }}>{trigger} <span style={{ opacity: 0.5 }}>may have variable related actions</span></div>
